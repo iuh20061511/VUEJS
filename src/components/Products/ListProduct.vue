@@ -35,13 +35,13 @@
             >
               Xóa
             </button>
-            <button class="btn btn-warning m-1">
-              <router-link :to="'/products/edit/' + product.id"
+            <button class="btn btn-warning m-1 ">
+              <router-link class="text-decoration-none" :to="'/products/edit/' + product.id"
                 >Sửa</router-link
               >
             </button>
             <button class="btn btn-info m-1">
-              <router-link :to="'/products/detail/' + product.id"
+              <router-link class="text-decoration-none text-light" :to="'/products/detail/' + product.id"
                 >Chi tiết</router-link
               >
             </button>

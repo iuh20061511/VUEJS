@@ -4,8 +4,8 @@
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col">
           <p>
-            <span class="h2">Shopping Cart </span>
-            <span class="h4">({{ totalItems }} items in your cart)</span>
+            <span class="h6">Giỏ hàng </span>
+            <span class="">({{ totalItems }} sản phẩm)</span>
           </p>
           <div
             v-for="(product, index) in carts.order_details"
@@ -17,27 +17,26 @@
                 <!-- Hình ảnh sản phẩm -->
                 <div class="col-md-3">
                   <img
-                    src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Products/1.webp"
-                    class="img-fluid"
-                    alt="Product Image"
-                    style="width: 100px"
-                  />
+              :src="getFullImageUrl(product.image)"
+              alt="Image"
+              style="width: 100px; height: auto"
+                      />
                 </div>
 
                 <div class="col-md-3">
-                  <p class="small text-muted">Name</p>
+                  <p class="small text-muted">Tên</p>
                   <p class="lead fw-normal">{{ product.product_name }}</p>
                 </div>
 
                 <!-- Số lượng sản phẩm -->
                 <div class="col-md-2">
-                  <p class="small text-muted">Quantity</p>
+                  <p class="small text-muted">Số lượng</p>
                   <p class="lead fw-normal">{{ product.quantity }}</p>
                 </div>
 
                 <!-- Giá đơn vị sản phẩm -->
                 <div class="col-md-2">
-                  <p class="small text-muted">Unit Price</p>
+                  <p class="small text-muted">đơn giá</p>
                   <p class="lead fw-normal">
                     {{ formatPrice(product.unit_price) }} đ
                   </p>
@@ -45,7 +44,7 @@
 
                 <!-- Tổng giá sản phẩm -->
                 <div class="col-md-2">
-                  <p class="small text-muted">Total</p>
+                  <p class="small text-muted">Thành tiền</p>
                   <p class="lead fw-normal">
                     {{ formatPrice(product.total_price) }} đ
                   </p>
@@ -59,7 +58,7 @@
             <div class="card-body p-4">
               <div class="float-end">
                 <p class="mb-0 me-5 d-flex align-items-center">
-                  <span class="small text-muted me-2">Order total:</span>
+                  <span class="small text-muted me-2">Tổng tiền:</span>
                   <span class="lead fw-normal">
                     {{ formatPrice(carts.total_order) }} đ
                   </span>
@@ -70,14 +69,6 @@
 
           <!-- Nút hành động -->
           <div class="d-flex justify-content-end">
-            <button
-              type="button"
-              data-mdb-button-init
-              data-mdb-ripple-init
-              class="btn btn-light btn-lg me-2"
-            >
-              Continue shopping
-            </button>
             <button
               type="button"
               data-mdb-button-init
@@ -96,7 +87,7 @@
 <script>
 import axios from "axios";
 import { mapGetters } from "vuex";
-import Swal from "sweetalert2"; // Import SweetAlert2
+import Swal from "sweetalert2"; 
 
 export default {
   data() {
@@ -116,6 +107,9 @@ export default {
   methods: {
     formatPrice(price) {
       return parseFloat(price).toLocaleString();
+    }, 
+    getFullImageUrl(imagePath) {
+      return `http://127.0.0.1:8000/storage/${imagePath}`;
     },
 
     async fetchcarts() {

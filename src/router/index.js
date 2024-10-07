@@ -9,9 +9,13 @@ import ListProduct from '@/components/Products/ListProduct.vue';
 import AddProduct from '@/components/Products/AddProduct.vue';
 import EditProduct from '@/components/Products/EditProduct.vue';
 import HomeView from '@/components/HomeView.vue';
-import ListOrder from '@/components/Orders/ListOrder.vue';
+import ListOrderUser from '@/components/Orders/ListOrderUser.vue';
 import shoppingCart from '@/components/Orders/shoppingCart.vue';
 import productsSold from '@/components/Products/productsSold.vue';
+import DetailProduct from '@/components/Products/DetailProduct.vue';
+import Oderstatistics from '@/components/Orders/Oderstatistics.vue';
+import ProductStatistics from '@/components/Products/ProductStatistics.vue';
+import ListOrder from '@/components/Orders/ListOrder.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -67,9 +71,14 @@ const router = createRouter({
       component: EditProduct,
 
     }, {
-      path: '/list-order',
-      name: 'ListOrder',
-      component: ListOrder,
+      path: '/products/edit/:id',
+      name: 'EditProduct',
+      component: EditProduct,
+
+    }, {
+      path: '/products/detail/:id',
+      name: 'DetailProduct',
+      component:  DetailProduct,
 
     }, {
       path: '/cart',
@@ -81,6 +90,27 @@ const router = createRouter({
       path: '/product-sold',
       name: 'productsSold',
       component: productsSold,
+
+    },{
+      path: '/list-order-user',
+      name: 'ListOrderUser',
+      component: ListOrderUser,
+
+    },{
+      path: '/list-order',
+      name: 'ListOrder',
+      component: ListOrder,
+
+    },{
+      path: '/oders-tatistics',
+      name: 'Oderstatistics',
+      component: Oderstatistics,
+
+    },
+    {
+      path: '/product-statistics',
+      name: 'ProductStatistics',
+      component: ProductStatistics,
 
     },
   ],

@@ -26,10 +26,10 @@
               Xóa
             </button>
             <button class="btn btn-warning m-1">
-              <router-link :to="'/users/edit/' + user.id">Sửa</router-link>
+              <router-link class="text-decoration-none" :to="'/users/edit/' + user.id">Sửa</router-link>
             </button>
             <button class="btn btn-info m-1">
-              <router-link :to="'/users/detail/' + user.id"
+              <router-link class="text-decoration-none text-light" :to="'/users/detail/' + user.id"
                 >Chi tiết</router-link
               >
             </button>

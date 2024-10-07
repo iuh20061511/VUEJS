@@ -18,8 +18,14 @@
                 Giá: {{ formatPrice(product.price) }} VNĐ
               </p>
               <p class="card-text">{{ product.description }}</p>
-              <button class="btn btn-primary" @click="addToCart(product.id)">
-                Thêm vào giỏ
+              <button
+                class="btn btn-primary"
+                :class="{ 'btn-success': addedProducts.includes(product.id) }"
+                @click="addToCart(product.id)"
+                :disabled="addedProducts.includes(product.id)"
+              >
+                <span v-if="addedProducts.includes(product.id)">✔ Đã thêm</span>
+                <span v-else>Thêm vào giỏ</span>
               </button>
             </div>
           </div>
@@ -28,16 +34,17 @@
     </div>
   </div>
 </template>
-  
-  <script>
+
+<script>
 import axios from "axios";
 import { mapGetters } from "vuex";
-import "vue-toastification/dist/index.css";
+
 export default {
   data() {
     return {
       products: [],
       loading: true,
+      addedProducts: [], // Biến lưu trạng thái sản phẩm đã thêm vào giỏ
     };
   },
   created() {
@@ -72,9 +79,27 @@ export default {
       }
     },
     async addToCart(productId) {
-      await axios.get(`http://127.0.0.1:8000/api/add-product/${productId}`, {
-        headers: { Authorization: `Bearer ${this.userInfo.token}` },
-      });
+      try {
+        await axios.get(`http://127.0.0.1:8000/api/add-product/${productId}`, {
+          headers: { Authorization: `Bearer ${this.userInfo.token}` },
+        });
+        
+        this.addedProducts.push(productId);
+        
+    
+        setTimeout(() => {
+          this.removeProductFromAdded(productId);
+        }, 1000);
+      } catch (error) {
+        console.error("Error adding product to cart:", error);
+        alert("Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại sau.");
+      }
+    },
+    removeProductFromAdded(productId) {
+      const index = this.addedProducts.indexOf(productId);
+      if (index !== -1) {
+        this.addedProducts.splice(index, 1);
+      }
     },
     formatPrice(price) {
       return new Intl.NumberFormat("vi-VN", {
@@ -88,7 +113,12 @@ export default {
   },
 };
 </script>
-  
-  <style>
+
+<style scoped>
+
+.btn-success {
+  background-color: #28a745 !important;
+  border-color: #28a745 !important;
+  color: white !important;
+}
 </style>
-  

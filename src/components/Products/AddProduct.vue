@@ -5,11 +5,7 @@
   >
     <h4 class="text-center">Thêm Sản Phẩm</h4>
 
-    <div v-if="errorMessage" class="text-danger mt-2">{{ errorMessage }}</div>
-    <h6 v-if="successMessage" class="alert alert-success text-center">
-      {{ successMessage }}
-    </h6>
-
+    <!-- Form thêm sản phẩm -->
     <form @submit.prevent="addProduct">
       <div class="form-group">
         <label for="productName">Tên Sản Phẩm:</label>
@@ -52,23 +48,28 @@
           required
         />
       </div>
+      <!-- Nút thêm sản phẩm -->
       <button type="submit" class="btn btn-primary mt-3">Thêm Sản Phẩm</button>
     </form>
+
+    <!-- Hiển thị thông báo lỗi nếu có -->
+    <p v-if="errorMessage" class="text-danger mt-3">{{ errorMessage }}</p>
   </div>
 </template>
+
 <script>
 import { mapGetters } from "vuex";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 export default {
   data() {
     return {
-      productName: "", // Tên sản phẩm
-      productDescription: "", // Mô tả sản phẩm
-      productPrice: 0, // Giá sản phẩm
-      productImage: null, // Hình ảnh sản phẩm
-      errorMessage: "", // Thông báo lỗi
-      successMessage: "", // Thông báo thành công
+      productName: "", 
+      productDescription: "",
+      productPrice: 0, 
+      productImage: null, 
+      errorMessage: "", 
     };
   },
   computed: {
@@ -77,12 +78,13 @@ export default {
   methods: {
     // Hàm thêm sản phẩm
     async addProduct() {
-      const formData = new FormData(); // Tạo đối tượng FormData để gửi dữ liệu
-      formData.append("name", this.productName); // Thêm tên sản phẩm
-      formData.append("description", this.productDescription); // Thêm mô tả
-      formData.append("price", this.productPrice); // Thêm giá
+      // Tạo đối tượng FormData để gửi dữ liệu
+      const formData = new FormData();
+      formData.append("name", this.productName);
+      formData.append("description", this.productDescription);
+      formData.append("price", this.productPrice);
       if (this.productImage) {
-        formData.append("image", this.productImage); // Thêm hình ảnh nếu có
+        formData.append("image", this.productImage);
       }
 
       try {
@@ -97,14 +99,13 @@ export default {
             },
           }
         );
+          Swal.fire({
+            title: "Thêm sản phẩm thành công",
+            icon: "success",
+            timer: 2000,
+          });
+          this.resetForm(); 
 
-        // Kiểm tra phản hồi từ server
-        if (data.success) {
-          this.successMessage = data.message || "Thêm sản phẩm thành công!";
-          this.resetForm(); // Reset form nếu thành công
-        } else {
-          this.errorMessage = data.message; // Hiển thị thông báo lỗi nếu không thành công
-        }
       } catch (error) {
         const { response } = error;
         if (response && response.status === 422) {
@@ -112,6 +113,11 @@ export default {
         } else {
           this.errorMessage = "Có lỗi xảy ra. Vui lòng thử lại.";
         }
+        Swal.fire({
+          title: "Có lỗi xảy ra",
+          text: this.errorMessage,
+          icon: "error",
+        });
       }
     },
 
@@ -122,7 +128,6 @@ export default {
       this.productPrice = 0;
       this.productImage = null;
       this.errorMessage = "";
-      this.successMessage = "";
     },
 
     // Hàm xử lý thay đổi tệp hình ảnh
