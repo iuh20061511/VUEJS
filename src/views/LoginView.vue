@@ -63,7 +63,7 @@ export default {
         .dispatch("login", this.form)
         .then(() => {
           // Sau khi đăng nhập thành công, bạn có thể chuyển hướng tới trang dashboard
-          this.$router.push("/dashboard");
+          this.$router.push("/home");
         })
         .catch((error) => {
           // Xử lý lỗi nếu cần

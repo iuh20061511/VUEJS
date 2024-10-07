@@ -25,7 +25,7 @@
                 :disabled="addedProducts.includes(product.id)"
               >
                 <span v-if="addedProducts.includes(product.id)">✔ Đã thêm</span>
-                <span v-else>Thêm vào giỏ</span>
+                <span v-else><i class="bi bi-cart-plus"></i></span>
               </button>
             </div>
           </div>
@@ -38,6 +38,7 @@
 <script>
 import axios from "axios";
 import { mapGetters } from "vuex";
+import { useToast } from "vue-toastification"; // Sử dụng useToast
 
 export default {
   data() {
@@ -79,14 +80,16 @@ export default {
       }
     },
     async addToCart(productId) {
+      const toast = useToast(); // Khởi tạo toast
+
       try {
         await axios.get(`http://127.0.0.1:8000/api/add-product/${productId}`, {
           headers: { Authorization: `Bearer ${this.userInfo.token}` },
         });
-        
+
         this.addedProducts.push(productId);
-        
-    
+        toast.success("Thêm sản phẩm vào giỏ hàng thành công!"); // Thông báo thành công
+
         setTimeout(() => {
           this.removeProductFromAdded(productId);
         }, 1000);
@@ -115,7 +118,6 @@ export default {
 </script>
 
 <style scoped>
-
 .btn-success {
   background-color: #28a745 !important;
   border-color: #28a745 !important;

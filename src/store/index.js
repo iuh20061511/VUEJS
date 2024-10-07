@@ -4,8 +4,8 @@ import axios from 'axios';
 const store = createStore({
     state() {
         return {
-            isAuthenticated: localStorage.getItem('isAuthenticated') === 'true', // Khôi phục từ localStorage
-            userInfo: JSON.parse(localStorage.getItem('userInfo')) || {}, // Khôi phục từ localStorage
+            isAuthenticated: localStorage.getItem('isAuthenticated') === 'true',
+            userInfo: JSON.parse(localStorage.getItem('userInfo')) || {},
             loading: false,
             errorMessage: '',
         };
@@ -18,8 +18,10 @@ const store = createStore({
         updateUserInfo(state, data) {
             state.userInfo = {
                 token: data.token,
-                id_admin: data.id_admin,
-                username: data.user, // Sửa lại thành username trực tiếp
+                role_id: data.role_id,
+                username: data.user,
+                id_user: data.id_user,
+
             };
             console.log("Updated User Info:", state.userInfo); // Kiểm tra dữ liệu
             localStorage.setItem('userInfo', JSON.stringify(state.userInfo)); // Lưu vào localStorage
@@ -43,11 +45,11 @@ const store = createStore({
                     },
                 });
 
-                const { success, message, token, id_admin, user } = response.data;
+                const { success, message, token, role_id, user, id_user } = response.data;
 
                 if (success) {
                     commit("setAuthentication", true); // Đặt trạng thái xác thực
-                    commit("updateUserInfo", { token, id_admin, user }); // Cập nhật thông tin người dùng
+                    commit("updateUserInfo", { token, role_id, user, id_user }); // Cập nhật thông tin người dùng
                     return response.data; // Trả về dữ liệu phản hồi
                 } else {
                     commit("setErrorMessage", message); // Cập nhật thông báo lỗi nếu không thành công

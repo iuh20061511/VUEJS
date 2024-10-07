@@ -4,7 +4,6 @@
     style="width: 500px; position: absolute; top: 80px; right: 30%"
   >
     <h4 class="text-center">Thêm Người Dùng</h4>
-    <div v-if="errorMessage" class="text-danger mt-2">{{ errorMessage }}</div>
 
     <h6 v-if="successMessage" class="alert alert-success text-center">
       {{ successMessage }}
@@ -131,12 +130,9 @@ export default {
         }
       } catch (error) {
         const { response } = error;
-        if (response && response.status === 422) {
-          this.errors = response.data.errors || {};
-          this.errorMessage = response.data.message;
-        } else {
-          this.errorMessage = "Có lỗi xảy ra. Vui lòng thử lại.";
-        }
+
+        this.errors = response.data.errors || {};
+        this.errorMessage = response.data.message;
       }
     },
     resetForm() {

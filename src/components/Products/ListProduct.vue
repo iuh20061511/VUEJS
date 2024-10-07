@@ -30,18 +30,23 @@
           </td>
           <td>
             <button
+              v-if="userInfo.role_id <= 3"
               class="btn btn-danger m-1"
               @click="deleteProduct(product.id)"
             >
               Xóa
             </button>
-            <button class="btn btn-warning m-1 ">
-              <router-link class="text-decoration-none" :to="'/products/edit/' + product.id"
+            <button v-if="userInfo.role_id <= 3" class="btn btn-warning m-1">
+              <router-link
+                class="text-decoration-none"
+                :to="'/products/edit/' + product.id"
                 >Sửa</router-link
               >
             </button>
             <button class="btn btn-info m-1">
-              <router-link class="text-decoration-none text-light" :to="'/products/detail/' + product.id"
+              <router-link
+                class="text-decoration-none text-light"
+                :to="'/products/detail/' + product.id"
                 >Chi tiết</router-link
               >
             </button>
@@ -59,8 +64,7 @@
     <div v-if="errorMessage" class="text-danger mt-2">{{ errorMessage }}</div>
   </div>
 </template>
-  
-  <script>
+<script>
 import { mapGetters } from "vuex";
 import axios from "axios";
 import Pagination from "../Pagination.vue";
@@ -151,4 +155,3 @@ export default {
   },
 };
 </script>
-  

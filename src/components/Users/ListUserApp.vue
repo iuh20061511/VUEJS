@@ -20,16 +20,36 @@
           <td>{{ user.first_name }} {{ user.last_name }}</td>
           <td>{{ user.username }}</td>
           <td>{{ user.email }}</td>
-
           <td>
-            <button class="btn btn-danger m-1" @click="deleteUser(user.id)">
+            <!-- Chỉ hiển thị nút Sửa nếu role_id của người dùng hiện tại là 1, 2 hoặc 3 -->
+            <button
+              v-if="
+                [1, 2, 3].includes(userInfo.role_id) ||
+                userInfo.id_user === user.id
+              "
+              class="btn btn-warning m-1"
+            >
+              <router-link
+                class="text-decoration-none"
+                :to="'/users/edit/' + user.id"
+                >Sửa</router-link
+              >
+            </button>
+
+            <!-- Chỉ hiển thị nút Xóa nếu role_id của người dùng hiện tại là 1 hoặc người dùng là chính mình -->
+            <button
+              v-if="userInfo.role_id === 1 || userInfo.id_user === user.id"
+              class="btn btn-danger m-1"
+              @click="deleteUser(user.id)"
+            >
               Xóa
             </button>
-            <button class="btn btn-warning m-1">
-              <router-link class="text-decoration-none" :to="'/users/edit/' + user.id">Sửa</router-link>
-            </button>
+
+            <!-- Nút Chi tiết luôn hiển thị cho tất cả người dùng -->
             <button class="btn btn-info m-1">
-              <router-link class="text-decoration-none text-light" :to="'/users/detail/' + user.id"
+              <router-link
+                class="text-decoration-none text-light"
+                :to="'/users/detail/' + user.id"
                 >Chi tiết</router-link
               >
             </button>
@@ -53,6 +73,7 @@ import { mapGetters } from "vuex";
 import axios from "axios";
 import Pagination from "../Pagination.vue";
 import Swal from "sweetalert2";
+
 export default {
   components: {
     Pagination,
@@ -70,7 +91,6 @@ export default {
   },
   methods: {
     async fetchUsers(page) {
-      // Đảm bảo rằng số trang không vượt quá số trang hiện có
       if (page < 1 || page > this.totalPages) return;
       this.currentPage = page;
 
@@ -121,10 +141,6 @@ export default {
           icon: "error",
         });
       }
-    },
-
-    editUser(userId) {
-      console.log(`Sửa người dùng với ID: ${userId}`);
     },
   },
   mounted() {

@@ -2,7 +2,7 @@
   <div class="container mt-5">
     <div class="card shadow-lg">
       <div class="card-header text-center">
-        <h2 class="mb-0">Danh sách Người dùng</h2>
+        <h2 class="mb-0">Danh sách người dùng mua</h2>
       </div>
       <div class="card-body">
         <LoadingSpinner :visible="loading" />
@@ -15,9 +15,15 @@
               id="searchEmail"
               v-model="searchEmail"
               class="form-control"
-              placeholder="Nhập email để tìm kiếm"
+              placeholder="Nhập username và email để tìm kiếm"
             />
-            <button class="btn btn-primary" type="button" @click="fetchOrderStatistics">Tìm kiếm</button>
+            <button
+              class="btn btn-primary"
+              type="button"
+              @click="fetchOrderStatistics(currentPage)"
+            >
+              Tìm kiếm
+            </button>
           </div>
         </form>
 
@@ -33,7 +39,9 @@
                 class="form-check-input"
                 id="sortQuantity"
               />
-              <label class="form-check-label" for="sortQuantity">User mua hàng có số lượng nhiều nhất</label>
+              <label class="form-check-label" for="sortQuantity"
+                >User mua hàng có số lượng nhiều nhất</label
+              >
             </div>
             <div class="form-check">
               <input
@@ -44,7 +52,9 @@
                 class="form-check-input"
                 id="sortValue"
               />
-              <label class="form-check-label" for="sortValue">User mua hàng có giá trị nhiều nhất</label>
+              <label class="form-check-label" for="sortValue"
+                >User mua hàng có giá trị nhiều nhất</label
+              >
             </div>
             <div class="form-check">
               <input
@@ -55,7 +65,9 @@
                 class="form-check-input"
                 id="sortNone"
               />
-              <label class="form-check-label" for="sortNone">User không mua hàng</label>
+              <label class="form-check-label" for="sortNone"
+                >User không mua hàng</label
+              >
             </div>
           </div>
           <button class="btn btn-primary">Tìm</button>
@@ -73,7 +85,7 @@
           </thead>
           <tbody>
             <tr v-for="(order, index) in orders" :key="index">
-              <td>{{ index + 1 }}</td>
+              <td>{{ ++index }}</td>
               <td>{{ order.username }}</td>
               <td>{{ order.email }}</td>
               <td>{{ order.total_quantity }}</td>
@@ -84,6 +96,16 @@
             </tr>
           </tbody>
         </table>
+
+        <Pagination
+          :currentPage="currentPage"
+          :totalPages="totalPages"
+          @page-changed="fetchOrderStatistics"
+        />
+
+        <div v-if="errorMessage" class="text-danger mt-2">
+          {{ errorMessage }}
+        </div>
       </div>
     </div>
   </div>
@@ -92,44 +114,55 @@
 <script>
 import axios from "axios";
 import { mapGetters } from "vuex";
-import LoadingSpinner from "@/components/LoadingSpinner.vue"; // Import component LoadingSpinner
+import LoadingSpinner from "@/components/LoadingSpinner.vue";
+import Pagination from "@/components/Pagination.vue"; // Import component phân trang
 
 export default {
   components: {
-    LoadingSpinner, // Đăng ký component LoadingSpinner
+    LoadingSpinner,
+    Pagination,
   },
   data() {
     return {
       orders: [],
       searchEmail: "",
-      sortOption: "quantity", // Mặc định là sắp xếp theo số lượng
-      loading: false, // Trạng thái loading
+      sortOption: "quantity",
+      loading: false,
+      currentPage: 1,
+      totalPages: 1,
+      errorMessage: "",
     };
   },
   computed: {
-    ...mapGetters(['userInfo']),
+    ...mapGetters(["userInfo"]),
   },
   methods: {
-    async fetchOrderStatistics() {
-      this.loading = true; // Bắt đầu tải
+    async fetchOrderStatistics(page = 1) {
+      this.loading = true;
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/user-purchases`, {
-          params: {
-            search: this.searchEmail,
-            sort_by_quantity: this.sortOption === "quantity",
-            sort_by_value: this.sortOption === "value",
-            exclude_purchased: this.sortOption === "none", // Thêm tham số để lọc người dùng không mua hàng
-          },
-          headers: {
-            Authorization: `Bearer ${this.userInfo.token}`,
-          },
-        });
+        const response = await axios.get(
+          `http://127.0.0.1:8000/api/user-purchases`,
+          {
+            params: {
+              search: this.searchEmail,
+              sort_by_quantity: this.sortOption === "quantity",
+              sort_by_value: this.sortOption === "value",
+              exclude_purchased: this.sortOption === "none",
+              page: page, // Gửi trang hiện tại
+            },
+            headers: {
+              Authorization: `Bearer ${this.userInfo.token}`,
+            },
+          }
+        );
 
-        this.orders = response.data;
-        console.log(this.orders);
+        // Cập nhật danh sách orders và tổng số trang từ response.data.data
+        this.orders = response.data.data;
+        this.totalPages = response.data.last_page; // Giả sử API trả về last_page
+        this.currentPage = page; // Cập nhật trang hiện tại
       } catch (error) {
         console.error("Lỗi khi lấy thông tin đơn hàng:", error);
-        // Xử lý hiển thị thông báo lỗi nếu cần thiết
+        this.errorMessage = "Có lỗi xảy ra.";
       } finally {
         this.loading = false; // Kết thúc tải
       }
@@ -142,15 +175,13 @@ export default {
     },
   },
   mounted() {
-    this.fetchOrderStatistics();
+    this.fetchOrderStatistics(); // Lấy thông tin khi component được gắn vào DOM
   },
 };
 </script>
 
 <style scoped>
-
 .container {
-  max-width: 900px; 
+  max-width: 900px;
 }
-
 </style>

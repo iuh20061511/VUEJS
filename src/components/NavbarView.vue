@@ -18,7 +18,7 @@
                     >Sản phẩm</RouterLink
                   >
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" v-if="userInfo.role_id == 1">
                   <RouterLink class="nav-link text-dark" to="/add-product"
                     >Thêm sản phẩm</RouterLink
                   >
@@ -40,7 +40,7 @@
                     >Danh sách</RouterLink
                   >
                 </li>
-                <li class="nav-item">
+                <li class="nav-item" v-if="userInfo.role_id == 1">
                   <RouterLink class="nav-link text-dark" to="/register"
                     >Thêm người dùng</RouterLink
                   >
@@ -48,8 +48,37 @@
               </ul>
             </li>
 
-            <li class="nav-item">
-              <RouterLink class="nav-link" to="/product"
+            <li class="nav-item dropdown" v-if="userInfo.role_id == 1">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                >Quản lý đơn hàng</a
+              >
+              <ul class="dropdown-menu">
+                <li class="nav-item">
+                  <RouterLink class="nav-link text-dark" to="/list-order"
+                    >Đơn hàng</RouterLink
+                  >
+                </li>
+                <li class="nav-item">
+                  <RouterLink class="nav-link text-dark" to="/oders-tatistics"
+                    >Thống kê đơn hàng</RouterLink
+                  >
+                </li>
+                <li class="nav-item">
+                  <RouterLink
+                    class="nav-link text-dark"
+                    to="/product-statistics"
+                    >Thống kê sản phẩm</RouterLink
+                  >
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item" style="position: absolute; right: 135px">
+              <RouterLink class="nav-link" to="/cart"
                 ><i class="bi bi-bag-fill"></i
               ></RouterLink>
             </li>
@@ -67,15 +96,11 @@
               >
               <ul class="dropdown-menu" style="position: absolute; left: -25px">
                 <li class="nav-item">
-                  <RouterLink class="nav-link text-dark" to="/list-order"
+                  <RouterLink class="nav-link text-dark" to="/list-order-user"
                     >Đơn hàng của tôi</RouterLink
                   >
                 </li>
-                <li>
-                  <RouterLink class="nav-link text-dark" to="/register"
-                    >Thêm người dùng</RouterLink
-                  >
-                </li>
+
                 <li><LogoutView></LogoutView></li>
               </ul>
             </li>
