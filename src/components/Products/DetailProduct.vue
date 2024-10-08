@@ -22,7 +22,7 @@
       
       <div class="mb-3">
         <label class="form-label"><strong>hình ảnh:</strong></label>
-        <div class="form-control"> <img :src=" image" alt="Image" style="width: 100px; height: auto"  /></div>
+        <div class="form-control"> <img :src="image" alt="Image" style="width: 100px; height: auto"  /></div>
       </div>
       
       <div class="mb-3">

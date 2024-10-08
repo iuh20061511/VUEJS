@@ -66,7 +66,7 @@ export default {
   data() {
     return {
       orders: [],
-      openOrderDetails: null, // Để theo dõi đơn hàng nào đang mở
+      openOrderDetails: null, 
     };
   },
   computed: {

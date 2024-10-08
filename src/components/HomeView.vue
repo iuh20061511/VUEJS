@@ -1,38 +1,37 @@
 <template>
-  <div class="container" style="margin-top: 100px">
-    <h1 class="text-center my-4">Danh Sách Sản Phẩm</h1>
 
-    <div v-if="loading" class="text-center">Đang tải sản phẩm...</div>
-    <div v-else>
-      <div class="row">
-        <div class="col-md-2" v-for="product in products" :key="product.id">
-          <div class="card product-card">
-            <img
-              :src="getImageUrl(product.image)"
-              class="card-img-top product-image"
-              :alt="product.name"
-            />
-            <div class="card-body">
-              <h5 class="card-title">{{ product.name }}</h5>
-              <p class="card-text price">
-                Giá: {{ formatPrice(product.price) }} VNĐ
-              </p>
-              <p class="card-text">{{ product.description }}</p>
-              <button
-                class="btn btn-primary"
-                :class="{ 'btn-success': addedProducts.includes(product.id) }"
-                @click="addToCart(product.id)"
-                :disabled="addedProducts.includes(product.id)"
-              >
-                <span v-if="addedProducts.includes(product.id)">✔ Đã thêm</span>
-                <span v-else><i class="bi bi-cart-plus"></i></span>
-              </button>
+  <section class="py-5 mt-3">
+            <div class="container px-4 px-lg-5 mt-5">
+                <div class="row gx-4 gx-lg-5 row-cols-6 justify-content-center">
+                    <div class="col mb-5" v-for="product in products" :key="product.id" >
+                        <div class="card h-100">
+                            <!-- Product image-->
+                            <img class="card-img-top" :src="getImageUrl(product.image)" alt="..." />
+                            <!-- Product details-->
+                            <div class="card-body p-4">
+                                <div class="text-center">
+                                    <!-- Product name-->
+                                    <h5 class="fw-bolder">{{ product.name }}</h5>
+                                    {{ formatPrice(product.price) }}
+                                </div>
+                            </div>
+                            <!-- Product actions-->
+                            <div class="card-footer p-2 pt-1 border-top-0 bg-transparent">
+                                <div class="text-center ">
+                                  <router-link class="text-decoration-none" :to="'/products/detail-shop/'+ product.id">
+                                    Chi tiết
+                                  </router-link>
+                                </div>
+                            </div>
+                            <button class="btn btn-danger" :class="{ 'btn-success': addedProducts.includes(product.id) }" @click="addToCart(product.id)"
+                             :disabled="addedProducts.includes(product.id)" style="width: 40px; position: absolute; bottom: 10px; right: 10px;">
+                             <span v-if="addedProducts.includes(product.id)">✔</span>
+                             <span v-else><i class="bi bi-cart-plus"></i></span></button>
+                        </div>
+                    </div>
+                  </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+        </section>
 </template>
 
 <script>
@@ -80,24 +79,27 @@ export default {
       }
     },
     async addToCart(productId) {
-      const toast = useToast(); // Khởi tạo toast
+  const toast = useToast(); // Khởi tạo toast
 
-      try {
-        await axios.get(`http://127.0.0.1:8000/api/add-product/${productId}`, {
-          headers: { Authorization: `Bearer ${this.userInfo.token}` },
-        });
+  try {
+    // Sửa lại cấu trúc axios.post
+    await axios.post(
+      `http://127.0.0.1:8000/api/add-product/${productId}`, 
+      {},
+      { headers: { Authorization: `Bearer ${this.userInfo.token}` } }
+    );
 
-        this.addedProducts.push(productId);
-        toast.success("Thêm sản phẩm vào giỏ hàng thành công!"); // Thông báo thành công
-
-        setTimeout(() => {
-          this.removeProductFromAdded(productId);
-        }, 1000);
-      } catch (error) {
-        console.error("Error adding product to cart:", error);
-        alert("Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại sau.");
-      }
-    },
+    this.addedProducts.push(productId);
+    toast.success("Thêm sản phẩm vào giỏ hàng thành công!"); 
+    setTimeout(() => {
+      this.removeProductFromAdded(productId);
+    }, 1000);
+  } catch (error) {
+    console.error("Error adding product to cart:", error);
+    alert("Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại sau.");
+  }
+}
+,
     removeProductFromAdded(productId) {
       const index = this.addedProducts.indexOf(productId);
       if (index !== -1) {
@@ -119,8 +121,8 @@ export default {
 
 <style scoped>
 .btn-success {
-  background-color: #28a745 !important;
-  border-color: #28a745 !important;
+  background-color: #22f553 !important;
+  border-color: #10e442 !important;
   color: white !important;
 }
 </style>

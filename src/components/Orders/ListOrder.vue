@@ -53,10 +53,12 @@
                 <h6>Chi tiết sản phẩm:</h6>
                 <table class="table table-striped m-1">
                   <thead class="bg-info text-center">
-                    <th>sản phẩm</th>
-                    <th>Số lượng</th>
-                    <th>Giá</th>
-                    <th>Tổng</th>
+                    <tr>
+                      <th>sản phẩm</th>
+                      <th>Số lượng</th>
+                      <th>Giá</th>
+                      <th>Tổng</th>
+                    </tr>
                   </thead>
                   <tbody class="text-center">
                     <tr v-for="(detail, index) in selectedOrder.order_details" :key="index">

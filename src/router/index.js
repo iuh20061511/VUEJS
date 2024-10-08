@@ -16,10 +16,11 @@ import DetailProduct from '@/components/Products/DetailProduct.vue';
 import Oderstatistics from '@/components/Orders/Oderstatistics.vue';
 import ProductStatistics from '@/components/Products/ProductStatistics.vue';
 import ListOrder from '@/components/Orders/ListOrder.vue';
-
+import DetailProductShop from '@/components/Products/DetailProductShop.vue';
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    
     {
       path: '/Login',
       name: 'Login',
@@ -84,6 +85,11 @@ const router = createRouter({
       path: '/cart',
       name: 'shoppingCart',
       component: shoppingCart,
+
+    }, {
+      path: '/products/detail-shop/:id',
+      name: 'DetailProductShop',
+      component: DetailProductShop,
 
     },
     {
